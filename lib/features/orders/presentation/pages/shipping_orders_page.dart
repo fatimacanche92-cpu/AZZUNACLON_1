@@ -45,6 +45,10 @@ class ShippingOrdersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
         title: Text(
           '📦 Pedidos en Envío',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),

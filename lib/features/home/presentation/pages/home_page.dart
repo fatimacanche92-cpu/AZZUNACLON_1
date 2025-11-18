@@ -50,12 +50,20 @@ class _HomePageState extends ConsumerState<HomePage> {
           IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              // Handle menu action
+              context.push('/profile');
             },
           ),
         ],
         backgroundColor: Colors.white,
         elevation: 0,
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          context.push('/encargo');
+        },
+        label: const Text('Nuevo Pedido'),
+        icon: const Icon(Icons.add),
+        backgroundColor: Colors.purple,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -130,8 +138,8 @@ class _HomePageState extends ConsumerState<HomePage> {
             label: 'Encargo',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.photo_library),
-            label: 'Galería',
+            icon: Icon(Icons.camera_alt),
+            label: 'Cámara',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.payment),

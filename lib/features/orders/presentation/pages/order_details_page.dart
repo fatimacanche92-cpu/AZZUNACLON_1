@@ -30,6 +30,10 @@ class OrderDetailsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text(
           'DETALLES DEL PEDIDO',
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
@@ -83,26 +87,27 @@ class OrderDetailsPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
             ],
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle "Marcar como Recogido" action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            if (order.deliveryType != OrderDeliveryType.envio)
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Handle "Marcar como Recogido" action
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    'Marcar como Recogido',
+                    style: GoogleFonts.poppins(fontSize: 16),
                   ),
                 ),
-                child: Text(
-                  'Marcar como Recogido',
-                  style: GoogleFonts.poppins(fontSize: 16),
-                ),
               ),
-            ),
           ],
         ),
       ),
