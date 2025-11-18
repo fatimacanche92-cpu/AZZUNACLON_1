@@ -1,0 +1,3 @@
+El script que debes usar es `database/correct_schema.sql`.
+
+Por favor, abre ese archivo, copia todo su contenido y pégalo en el Editor SQL de Supabase, como se detalla en el "Paso 2: La Solución" de las instrucciones anteriores.
