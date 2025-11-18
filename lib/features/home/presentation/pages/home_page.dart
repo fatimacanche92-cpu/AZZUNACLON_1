@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/theme/app_theme.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -11,6 +15,25 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   int _currentIndex = 0;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  // Dummy event data
+  final Map<DateTime, List<String>> _events = {
+    DateTime.utc(2025, 11, 18): ['normal', 'entrega'],
+    DateTime.utc(2025, 11, 20): ['pendiente'],
+    DateTime.utc(2025, 11, 25): ['alerta'],
+  };
+
+  List<String> _getEventsForDay(DateTime day) {
+    return _events[DateTime.utc(day.year, day.month, day.day)] ?? [];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +62,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Placeholder for Mini Calendar
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(
-                child: Text('Mini Calendar Placeholder'),
-              ),
-            ),
+            _buildCalendar(),
             const SizedBox(height: 24),
             // Status Cards
             Row(
@@ -60,7 +73,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     title: 'Pedidos en envío',
                     subtitle: 'X pedidos activos',
                     onTap: () {
-                      // Navigate to shipping orders
+                      context.push('/shipping-orders');
                     },
                   ),
                 ),
@@ -71,7 +84,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     title: 'Pedidos por recoger',
                     subtitle: 'X pendientes',
                     onTap: () {
-                      // Navigate to pickup orders
+                      context.push('/pickup-orders');
                     },
                   ),
                 ),
@@ -98,6 +111,18 @@ class _HomePageState extends ConsumerState<HomePage> {
           setState(() {
             _currentIndex = index;
           });
+          switch (index) {
+            case 0:
+              context.go('/home'); // Assuming home is the 'Encargo' section for now
+              break;
+            case 1:
+              context.go('/gallery');
+              break;
+            case 2:
+              // Placeholder for Payment screen
+              // context.go('/payment');
+              break;
+          }
         },
         items: const [
           BottomNavigationBarItem(
@@ -116,6 +141,100 @@ class _HomePageState extends ConsumerState<HomePage> {
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.grey,
       ),
+    );
+  }
+
+  Widget _buildCalendar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: TableCalendar(
+        firstDay: DateTime.utc(2020, 1, 1),
+        lastDay: DateTime.utc(2030, 12, 31),
+        focusedDay: _focusedDay,
+        calendarFormat: CalendarFormat.month,
+        headerStyle: HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
+          titleTextStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
+        calendarStyle: CalendarStyle(
+          todayDecoration: BoxDecoration(
+            color: Colors.purple.withOpacity(0.5),
+            shape: BoxShape.circle,
+          ),
+          selectedDecoration: const BoxDecoration(
+            color: Colors.purple,
+            shape: BoxShape.circle,
+          ),
+        ),
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+          });
+        },
+        eventLoader: _getEventsForDay,
+        calendarBuilders: CalendarBuilders(
+          markerBuilder: (context, date, events) {
+            if (events.isNotEmpty) {
+              return Positioned(
+                right: 1,
+                bottom: 1,
+                child: _buildEventsMarker(events),
+              );
+            }
+            return null;
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEventsMarker(List<dynamic> events) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: events.map((event) {
+        Color color;
+        switch (event) {
+          case 'normal':
+            color = Colors.green;
+            break;
+          case 'entrega':
+            color = Colors.blue;
+            break;
+          case 'pendiente':
+            color = Colors.yellow;
+            break;
+          case 'alerta':
+            color = Colors.red;
+            break;
+          default:
+            color = Colors.grey;
+        }
+        return Container(
+          width: 7,
+          height: 7,
+          margin: const EdgeInsets.symmetric(horizontal: 0.5),
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        );
+      }).toList(),
     );
   }
 

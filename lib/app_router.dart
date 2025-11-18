@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 // New Feature Screens
-import 'features/home/home_screen.dart';
+import 'features/home/presentation/pages/home_page.dart';
+import 'features/orders/presentation/pages/shipping_orders_page.dart';
+import 'features/orders/presentation/pages/pickup_orders_page.dart';
+import 'features/orders/presentation/pages/order_details_page.dart';
+import 'features/orders/domain/models/order_model.dart'; // Import OrderModel
+
+// Missing Imports
 import 'features/gallery/gallery_screen.dart';
 import 'features/gallery/album_screen.dart';
 import 'features/encargo/encargo_home.dart';
@@ -49,7 +55,22 @@ final appRouter = GoRouter(
     // New Internal App Structure
     GoRoute(
       path: '/home',
-      builder: (context, state) => const HomeScreen(), // This is the new Home
+      builder: (context, state) => const HomePage(), // This is the new Home
+    ),
+    GoRoute(
+      path: '/shipping-orders',
+      builder: (context, state) => const ShippingOrdersPage(),
+    ),
+    GoRoute(
+      path: '/pickup-orders',
+      builder: (context, state) => const PickupOrdersPage(),
+    ),
+    GoRoute(
+      path: '/order-details',
+      builder: (context, state) {
+        final order = state.extra as OrderModel;
+        return OrderDetailsPage(order: order);
+      },
     ),
     GoRoute(
       path: '/gallery',
