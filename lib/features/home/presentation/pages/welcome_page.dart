@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart'; // Import go_router
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../shared/services/supabase_service.dart';
 
@@ -37,8 +37,8 @@ class _WelcomePageState extends State<WelcomePage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.purpleLight,
-              AppColors.purpleDark,
+              AppColors.roseQuartz.withOpacity(0.5),
+              AppColors.blush,
             ],
           ),
         ),
@@ -108,7 +108,7 @@ class _WelcomePageState extends State<WelcomePage> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.black.withOpacity(0.2),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),
@@ -122,14 +122,14 @@ class _WelcomePageState extends State<WelcomePage> {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          AppColors.accentPurple,
-                          AppColors.primaryMagenta,
+                          AppColors.redWine,
+                          AppColors.blush,
                         ],
                       ),
                     ),
@@ -161,7 +161,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: Colors.white.withOpacity(0.8),
                       blurRadius: 6,
                       spreadRadius: 2,
                     ),
@@ -185,7 +185,7 @@ class _WelcomePageState extends State<WelcomePage> {
           width: 8,
           height: 8,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.3 + (value * 0.7)),
+            color: Colors.white.withOpacity(0.3 + (value * 0.7)),
             shape: BoxShape.circle,
           ),
         );

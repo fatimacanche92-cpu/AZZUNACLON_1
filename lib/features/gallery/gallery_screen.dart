@@ -69,6 +69,7 @@ class GalleryScreen extends ConsumerWidget {
               },
             ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'gallery_fab',
         onPressed: () => _showCreateAlbumDialog(context, ref),
         label: const Text('Crear Álbum'),
         icon: const Icon(Icons.add),

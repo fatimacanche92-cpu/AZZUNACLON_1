@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../models/profile_model.dart';
 import '../../services/profile_service.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/theme/theme.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -30,8 +32,6 @@ class _ProfilePageState extends State<ProfilePage> {
   String? _avatarUrl;
   bool _isEditing = false;
   bool _isSaving = false;
-
-  static const Color primaryColor = Color(0xFF340A6B);
 
   @override
   void initState() {
@@ -60,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (mounted) {
         setState(() {
           _profile = profile;
-          _avatarUrl = profile.avatarUrl; // Assuming avatarUrl is now part of the Profile model
+          _avatarUrl = profile.avatarUrl;
           _updateControllers(profile);
         });
       }
@@ -85,11 +85,9 @@ class _ProfilePageState extends State<ProfilePage> {
     _businessDescriptionController.text = profile.businessDescription ?? '';
 
     _socialMediaControllers.clear();
-    if (profile.socialMediaLinks != null) {
-      for (var link in profile.socialMediaLinks!) {
-        _socialMediaControllers.add(TextEditingController(text: link));
-      }
-    }
+    _socialMediaControllers.addAll(
+      (profile.socialMediaLinks).map((link) => TextEditingController(text: link))
+    );
   }
 
   Future<void> _saveChanges() async {
@@ -108,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
         businessHours: _businessHoursController.text,
         businessDescription: _businessDescriptionController.text,
         socialMediaLinks: _socialMediaControllers.map((e) => e.text).toList(),
-        avatarUrl: _avatarUrl, // Include avatarUrl in copyWith
+        avatarUrl: _avatarUrl,
       );
 
       await _profileService.updateProfile(updatedProfile);
@@ -139,9 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile == null) {
-      return;
-    }
+    if (pickedFile == null) return;
 
     final imageFile = File(pickedFile.path);
 
@@ -149,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final newAvatarUrl = await _profileService.uploadAvatar(imageFile);
       setState(() {
         _avatarUrl = newAvatarUrl;
-        _profile = _profile?.copyWith(avatarUrl: newAvatarUrl); // Update profile with new avatar URL
+        _profile = _profile?.copyWith(avatarUrl: newAvatarUrl);
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -186,8 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       await _profileService.signOut();
       if (mounted) {
-        // Navigate to login page or welcome page
-        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+        context.go('/login');
       }
     } catch (e) {
       if (mounted) {
@@ -201,15 +196,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3E5F5),
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: primaryColor),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Perfil', style: GoogleFonts.poppins(color: primaryColor, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        title: const Text('Perfil'),
         actions: [
           TextButton(
             onPressed: _isSaving ? null : () {
@@ -220,11 +212,8 @@ class _ProfilePageState extends State<ProfilePage> {
               }
             },
             child: _isSaving
-                ? const CircularProgressIndicator(color: primaryColor)
-                : Text(
-                    _isEditing ? 'Guardar' : 'Editar',
-                    style: GoogleFonts.poppins(color: primaryColor, fontWeight: FontWeight.bold),
-                  ),
+                ? const CircularProgressIndicator()
+                : Text(_isEditing ? 'Guardar' : 'Editar'),
           ),
         ],
       ),
@@ -232,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
         future: _profileFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: primaryColor));
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError || !snapshot.hasData) {
             return Center(
@@ -246,50 +235,46 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           }
 
-          return _buildProfileForm();
+          return _buildProfileForm(context);
         },
       ),
     );
   }
 
-  Widget _buildProfileForm() {
+  Widget _buildProfileForm(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
         child: Column(
           children: [
-            _buildProfileHeader(),
+            _buildProfileHeader(context),
             const SizedBox(height: 32),
-            _buildTextField(_nameController, 'Nombre', Icons.person),
+            _buildTextField(context, _nameController, 'Nombre', Icons.person),
             const SizedBox(height: 16),
-            _buildTextField(_floreriaController, 'Florería', Icons.store),
+            _buildTextField(context, _floreriaController, 'Florería', Icons.store),
             const SizedBox(height: 16),
-            _buildTextField(_telefonoController, 'Teléfono', Icons.phone),
+            _buildTextField(context, _telefonoController, 'Teléfono', Icons.phone),
             const SizedBox(height: 16),
-            _buildTextField(_locationController, 'Ubicación', Icons.location_on),
+            _buildTextField(context, _locationController, 'Ubicación', Icons.location_on),
             const SizedBox(height: 16),
-            _buildTextField(_businessHoursController, 'Horario de Atención', Icons.access_time),
+            _buildTextField(context, _businessHoursController, 'Horario de Atención', Icons.access_time),
             const SizedBox(height: 16),
-            _buildTextField(_businessDescriptionController, 'Descripción del Negocio', Icons.description, maxLines: 3),
+            _buildTextField(context, _businessDescriptionController, 'Descripción del Negocio', Icons.description, maxLines: 3),
             const SizedBox(height: 16),
-            _buildTextField(_emailController, 'Correo', Icons.email, isEditable: false),
+            _buildTextField(context, _emailController, 'Correo', Icons.email, isEditable: false),
             const SizedBox(height: 16),
-            _buildSocialMediaLinksSection(),
+            _buildSocialMediaLinksSection(context),
             const SizedBox(height: 32),
-            _buildPasswordSection(),
+            _buildPasswordSection(context),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _logout,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: Theme.of(context).colorScheme.onError,
               ),
-              child: Text(
-                'Cerrar Sesión',
-                style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              child: const Text('Cerrar Sesión'),
             ),
           ],
         ),
@@ -297,7 +282,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         children: [
@@ -307,10 +293,10 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 CircleAvatar(
                   radius: 60,
-                  backgroundColor: primaryColor,
+                  backgroundColor: theme.colorScheme.primary,
                   backgroundImage: _avatarUrl != null ? NetworkImage(_avatarUrl!) : null,
                   child: _avatarUrl == null
-                      ? const Icon(Icons.person, size: 60, color: Colors.white)
+                      ? Icon(Icons.person, size: 60, color: theme.colorScheme.onPrimary)
                       : null,
                 ),
                 if (_isEditing)
@@ -319,11 +305,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     right: 0,
                     child: Container(
                       padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.edit, color: primaryColor, size: 20),
+                      child: Icon(Icons.edit, color: theme.colorScheme.primary, size: 20),
                     ),
                   ),
               ],
@@ -332,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 16),
           Text(
             _nameController.text,
-            style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+            style: theme.textTheme.headlineSmall,
           ),
         ],
       ),
@@ -340,22 +326,23 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildTextField(
+    BuildContext context,
     TextEditingController controller,
     String label,
     IconData icon, {
     bool isEditable = true,
     int maxLines = 1,
   }) {
+    final theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       readOnly: !_isEditing || !isEditable,
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: GoogleFonts.poppins(),
-        prefixIcon: Icon(icon, color: primaryColor),
+        prefixIcon: Icon(icon, color: theme.colorScheme.primary),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.8),
+        fillColor: theme.colorScheme.surface.withOpacity(0.5),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -374,13 +361,13 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildSocialMediaLinksSection() {
+  Widget _buildSocialMediaLinksSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Redes Sociales',
-          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
         ..._socialMediaControllers.asMap().entries.map((entry) {
@@ -391,11 +378,11 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Row(
               children: [
                 Expanded(
-                  child: _buildTextField(controller, 'Enlace de Red Social', Icons.link, isEditable: _isEditing),
+                  child: _buildTextField(context, controller, 'Enlace de Red Social', Icons.link, isEditable: _isEditing),
                 ),
                 if (_isEditing)
                   IconButton(
-                    icon: const Icon(Icons.remove_circle_outline, color: Colors.red),
+                    icon: Icon(Icons.remove_circle_outline, color: Theme.of(context).colorScheme.error),
                     onPressed: () {
                       setState(() {
                         controller.dispose();
@@ -416,33 +403,30 @@ class _ProfilePageState extends State<ProfilePage> {
                   _socialMediaControllers.add(TextEditingController());
                 });
               },
-              icon: const Icon(Icons.add, color: primaryColor),
-              label: Text('Añadir Enlace', style: GoogleFonts.poppins(color: primaryColor)),
+              icon: const Icon(Icons.add),
+              label: const Text('Añadir Enlace'),
             ),
           ),
       ],
     );
   }
 
-  Widget _buildPasswordSection() {
+  Widget _buildPasswordSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Contraseña',
-          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600),
+           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
-        _buildTextField(TextEditingController(text: '********'), 'Contraseña', Icons.lock, isEditable: false),
+        _buildTextField(context, TextEditingController(text: '********'), 'Contraseña', Icons.lock, isEditable: false),
         const SizedBox(height: 8),
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: _changePassword,
-            child: Text(
-              'Cambiar Contraseña',
-              style: GoogleFonts.poppins(color: primaryColor, fontWeight: FontWeight.bold),
-            ),
+            child: const Text('Cambiar Contraseña'),
           ),
         ),
       ],

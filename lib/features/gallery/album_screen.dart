@@ -66,6 +66,7 @@ class AlbumScreen extends ConsumerWidget {
               },
             ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'album_fab',
         onPressed: () {
           ref.read(galleryServiceProvider.notifier).addPhotoToAlbum(albumId);
         },

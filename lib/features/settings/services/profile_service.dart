@@ -18,7 +18,7 @@ class ProfileService {
     try {
       final userId = _getUserId();
       final data =
-          await _supabase.from('profiles').select().eq('user_id', userId).single();
+          await _supabase.from('profiles').select().eq('id', userId).single();
       return Profile.fromJson(data);
     } on PostgrestException catch (e) {
       if (e.code == 'PGRST116') {
@@ -36,16 +36,23 @@ class ProfileService {
     final user = _supabase.auth.currentUser!;
     final profileData = {
       'id': user.id,
-      'user_id': user.id,
       'email': user.email,
-      'name': user.userMetadata?['name'] ?? user.email,
-      'location': null,
-      'businessHours': null,
-      'businessDescription': null,
-      'socialMediaLinks': [],
+      'full_name': user.userMetadata?['name'] ?? user.email,
     };
     await _supabase.from('profiles').insert(profileData);
-    return Profile.fromJson(profileData);
+    
+    return Profile(
+      id: user.id,
+      email: user.email,
+      name: user.userMetadata?['name'] ?? user.email,
+      floristeria: null,
+      telefono: null,
+      location: null,
+      businessHours: null,
+      businessDescription: null,
+      socialMediaLinks: [],
+      avatarUrl: null,
+    );
   }
 
   Future<void> updateProfile(Profile profile) async {
@@ -53,10 +60,9 @@ class ProfileService {
       final userId = _getUserId();
       final updates = profile.toJson()
         ..remove('id')
-        ..remove('user_id')
         ..remove('email');
 
-      await _supabase.from('profiles').update(updates).eq('user_id', userId);
+      await _supabase.from('profiles').update(updates).eq('id', userId);
     } catch (e) {
       print('Error in updateProfile: $e');
       throw Exception('Error updating profile.');

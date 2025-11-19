@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_theme.dart';
-
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -14,7 +12,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  int _currentIndex = 0;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
@@ -39,13 +36,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Azzuna',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
+        title: const Text('Azzuna'),
         actions: [
           IconButton(
             icon: const Icon(Icons.menu),
@@ -54,23 +45,21 @@ class _HomePageState extends ConsumerState<HomePage> {
             },
           ),
         ],
-        backgroundColor: Colors.white,
-        elevation: 0,
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'home_fab',
         onPressed: () {
           context.push('/encargo');
         },
         label: const Text('Nuevo Pedido'),
         icon: const Icon(Icons.add),
-        backgroundColor: Colors.purple,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildCalendar(),
+            _buildCalendar(context),
             const SizedBox(height: 24),
             // Status Cards
             Row(
@@ -113,49 +102,14 @@ class _HomePageState extends ConsumerState<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          switch (index) {
-            case 0:
-              context.go('/home'); // Assuming home is the 'Encargo' section for now
-              break;
-            case 1:
-              context.go('/gallery');
-              break;
-            case 2:
-              // Placeholder for Payment screen
-              // context.go('/payment');
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.arrow_upward),
-            label: 'Encargo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera_alt),
-            label: 'Cámara',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.payment),
-            label: 'Pago',
-          ),
-        ],
-        selectedItemColor: Colors.purple,
-        unselectedItemColor: Colors.grey,
-      ),
     );
   }
 
-  Widget _buildCalendar() {
+  Widget _buildCalendar(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardTheme.color ?? Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -178,11 +132,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         calendarStyle: CalendarStyle(
           todayDecoration: BoxDecoration(
-            color: Colors.purple.withOpacity(0.5),
+            color: theme.colorScheme.primary.withOpacity(0.5),
             shape: BoxShape.circle,
           ),
-          selectedDecoration: const BoxDecoration(
-            color: Colors.purple,
+          selectedDecoration: BoxDecoration(
+            color: theme.colorScheme.primary,
             shape: BoxShape.circle,
           ),
         ),
@@ -257,7 +211,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardTheme.color ?? Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -287,7 +241,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             Text(
               subtitle,
               style: GoogleFonts.poppins(
-                color: Colors.grey[600],
+                color: Theme.of(context).textTheme.bodySmall?.color,
                 fontSize: 12,
               ),
             ),

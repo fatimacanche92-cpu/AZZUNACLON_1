@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../providers/register_provider.dart';
 
@@ -47,6 +47,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     final registerState = ref.watch(registerProvider);
+    final theme = Theme.of(context);
 
     // Si el registro fue exitoso, navegar según el caso
     if (registerState.isSuccess) {
@@ -82,10 +83,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             controller: _nameController,
             keyboardType: TextInputType.name,
             textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Nombre completo',
               hintText: 'Tu nombre',
-              prefixIcon: Icon(Icons.person_outlined, color: AppColors.textLight),
+              prefixIcon: Icon(Icons.person_outlined, color: theme.hintColor),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -104,10 +105,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Correo electrónico',
               hintText: 'tu@email.com',
-              prefixIcon: Icon(Icons.email_outlined, color: AppColors.textLight),
+              prefixIcon: Icon(Icons.email_outlined, color: theme.hintColor),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -129,16 +130,16 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             decoration: InputDecoration(
               labelText: 'Contraseña',
               hintText: 'Mínimo 6 caracteres',
-              prefixIcon: const Icon(
+              prefixIcon: Icon(
                 Icons.lock_outlined,
-                color: AppColors.textLight,
+                color: theme.hintColor,
               ),
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: AppColors.textLight,
+                  color: theme.hintColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -168,16 +169,16 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             decoration: InputDecoration(
               labelText: 'Confirmar contraseña',
               hintText: 'Repite tu contraseña',
-              prefixIcon: const Icon(
+              prefixIcon: Icon(
                 Icons.lock_outlined,
-                color: AppColors.textLight,
+                color: theme.hintColor,
               ),
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscureConfirmPassword
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: AppColors.textLight,
+                  color: theme.hintColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -202,20 +203,20 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           OutlinedButton(
             onPressed: registerState.isLoading ? null : _handleRegister,
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.accentPurple,
-              side: const BorderSide(color: AppColors.accentPurple, width: 2),
+              foregroundColor: theme.colorScheme.primary,
+              side: BorderSide(color: theme.colorScheme.primary, width: 2),
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
             child: registerState.isLoading
-                ? const SizedBox(
+                ? SizedBox(
                     height: 20,
                     width: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentPurple),
+                      valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
                     ),
                   )
                 : const Text(
@@ -233,23 +234,23 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Text(
+              Text(
                 '¿Ya tienes una cuenta? ',
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.textLight,
+                  color: theme.hintColor,
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text(
+                child: Text(
                   'Iniciar sesión',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.accentPurple,
+                    color: theme.colorScheme.primary,
                     decoration: TextDecoration.underline,
                   ),
                 ),

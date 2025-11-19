@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app_router.dart'; // Import the new router
 import 'core/config/app_config.dart';
-import 'core/theme/app_theme.dart';
-import 'shared/providers/theme_provider.dart';
+import 'core/theme/theme.dart'; // Import new theme system
 import 'shared/services/supabase_service.dart';
 
 void main() async {
@@ -36,14 +35,12 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
+    final activeTheme = ref.watch(themeProvider);
 
     return MaterialApp.router(
       title: AppConfig.appName,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: themeMode,
+      theme: activeTheme,
       routerConfig: appRouter, // Use the new router
     );
   }

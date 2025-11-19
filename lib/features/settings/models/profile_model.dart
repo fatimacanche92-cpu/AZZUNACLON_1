@@ -7,16 +7,15 @@ part 'profile_model.g.dart';
 class Profile with _$Profile {
   const factory Profile({
     required String id,
-    @JsonKey(name: 'user_id') required String userId,
-    String? name,
-    String? floristeria,
+    @JsonKey(name: 'full_name') String? name,
+    @JsonKey(name: 'shop_name') String? floristeria,
     String? email,
-    String? telefono,
-    String? location,
-    String? businessHours,
-    String? businessDescription,
-    @Default([]) List<String> socialMediaLinks,
-    String? avatarUrl,
+    @JsonKey(name: 'phone') String? telefono,
+    @JsonKey(name: 'address') String? location,
+    @JsonKey(name: 'schedule') String? businessHours,
+    @JsonKey(name: 'shop_description') String? businessDescription,
+    @JsonKey(name: 'social_links') @Default([]) List<String> socialMediaLinks,
+    @JsonKey(name: 'avatar_url') String? avatarUrl,
   }) = _Profile;
 
   factory Profile.fromJson(Map<String, dynamic> json) =>

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart'; // Import go_router
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../providers/login_provider.dart';
 
@@ -43,6 +43,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final loginState = ref.watch(loginProvider);
+    final theme = Theme.of(context);
 
     // Listener para manejar la navegación y los dialogs sin interferir con el build
     ref.listen<LoginState>(loginProvider, (previous, next) {
@@ -71,10 +72,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Correo electrónico',
               hintText: 'tu@email.com',
-              prefixIcon: Icon(Icons.email_outlined, color: AppColors.textLight),
+              prefixIcon: Icon(Icons.email_outlined, color: theme.hintColor),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -97,16 +98,16 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             decoration: InputDecoration(
               labelText: 'Contraseña',
               hintText: '••••••••',
-              prefixIcon: const Icon(
+              prefixIcon: Icon(
                 Icons.lock_outlined,
-                color: AppColors.textLight,
+                color: theme.hintColor,
               ),
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: AppColors.textLight,
+                  color: theme.hintColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -140,16 +141,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       _rememberMe = value;
                     });
                   },
-                  activeThumbColor: AppColors.accentPurple,
+                  activeThumbColor: theme.colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 'Recordarme',
-                style: TextStyle(
-                  color: AppColors.textDark,
-                  fontSize: 14,
-                ),
+                style: theme.textTheme.bodyMedium,
               ),
             ],
           ),
@@ -158,14 +156,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           // Botón de iniciar sesión
           ElevatedButton(
             onPressed: loginState.isLoading ? null : _handleLogin,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accentPurple,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
             child: loginState.isLoading
                 ? const SizedBox(
                     height: 20,
@@ -190,9 +180,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             onPressed: () {
               // TODO: Implementar recuperación de contraseña
             },
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.accentPurple,
-            ),
             child: const Text(
               '¿Olvidaste tu contraseña?',
               style: TextStyle(
@@ -208,11 +195,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Text(
+              Text(
                 '¿No tienes una cuenta? ',
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.textLight,
+                  color: theme.hintColor,
                 ),
               ),
               GestureDetector(
@@ -220,12 +207,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   // Usar go_router para navegar
                   context.push(AppConstants.registerRoute);
                 },
-                child: const Text(
+                child: Text(
                   'Crear cuenta',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.accentPurple,
+                    color: theme.colorScheme.primary,
                     decoration: TextDecoration.underline,
                   ),
                 ),

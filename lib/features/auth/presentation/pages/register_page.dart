@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/register_form.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme.dart';
 
 /// Página de registro
 class RegisterPage extends ConsumerWidget {
@@ -9,15 +9,18 @@ class RegisterPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.purpleLight,
-              AppColors.purpleDark,
+              AppColors.roseQuartz.withOpacity(0.5),
+              AppColors.blush,
             ],
           ),
         ),
@@ -38,7 +41,7 @@ class RegisterPage extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
+                          color: Colors.black.withOpacity(0.1),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -50,9 +53,9 @@ class RegisterPage extends ConsumerWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.arrow_back,
-                              color: AppColors.accentPurple,
+                              color: colors.primary,
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();
@@ -65,24 +68,19 @@ class RegisterPage extends ConsumerWidget {
                         const SizedBox(height: 16),
                         
                         // Título
-                        const Text(
+                        Text(
                           'Crear cuenta',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.accentPurple,
+                          style: theme.textTheme.headlineLarge?.copyWith(
+                            color: colors.primary
                           ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
                         
                         // Tagline
-                        const Text(
+                        Text(
                           'Únete a Azzuna y comienza a organizar tus arreglos florales',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: AppColors.textLight,
-                          ),
+                          style: theme.textTheme.bodyLarge,
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 32),
@@ -116,7 +114,7 @@ class RegisterPage extends ConsumerWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.black.withOpacity(0.2),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),
@@ -130,14 +128,14 @@ class RegisterPage extends ConsumerWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          AppColors.accentPurple,
-                          AppColors.primaryMagenta,
+                          AppColors.redWine,
+                          AppColors.blush,
                         ],
                       ),
                     ),
@@ -169,7 +167,7 @@ class RegisterPage extends ConsumerWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: Colors.white.withOpacity(0.8),
                       blurRadius: 6,
                       spreadRadius: 2,
                     ),
