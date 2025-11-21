@@ -8,7 +8,7 @@ class Profile with _$Profile {
   const factory Profile({
     required String id,
     @JsonKey(name: 'full_name') String? name,
-    @JsonKey(name: 'shop_name') String? floristeria,
+  
     String? email,
     @JsonKey(name: 'phone') String? telefono,
     @JsonKey(name: 'address') String? location,

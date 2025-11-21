@@ -20,7 +20,7 @@ class ProfileService {
       final data = await _supabase
           .from('user_profiles')
           .select(
-            'id, full_name, shop_name, email, phone, address, schedule, shop_description, social_links, avatar_url',
+            'id, full_name, email, phone, address, schedule, shop_description, social_links, avatar_url',
           )
           .eq('id', userId)
           .single();
@@ -50,7 +50,6 @@ class ProfileService {
       id: user.id,
       email: user.email,
       name: user.userMetadata?['name'] ?? user.email,
-      floristeria: null,
       telefono: null,
       location: null,
       businessHours: null,

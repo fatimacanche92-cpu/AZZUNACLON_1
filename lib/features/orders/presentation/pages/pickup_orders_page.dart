@@ -42,7 +42,7 @@ class PickupOrdersPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const ImageIcon(AssetImage('assets/icon.png')),
           onPressed: () => context.pop(),
         ),
         title: Text(

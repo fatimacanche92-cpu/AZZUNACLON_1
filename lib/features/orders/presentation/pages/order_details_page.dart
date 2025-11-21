@@ -31,7 +31,7 @@ class OrderDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const ImageIcon(AssetImage('assets/icon.png')),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(

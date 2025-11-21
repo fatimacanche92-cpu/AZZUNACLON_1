@@ -39,7 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         title: const Text('Azzuna'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.menu),
+            icon: const ImageIcon(AssetImage('assets/icon.png')),
             onPressed: () {
               context.push('/profile');
             },
@@ -52,7 +52,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           context.push('/encargo');
         },
         label: const Text('Nuevo Pedido'),
-        icon: const Icon(Icons.add),
+        icon: const ImageIcon(AssetImage('assets/icon.png')),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

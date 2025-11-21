@@ -19,7 +19,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
-  final _floreriaController = TextEditingController();
   final _emailController = TextEditingController();
   final _telefonoController = TextEditingController();
   final _locationController = TextEditingController();
@@ -42,7 +41,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void dispose() {
     _nameController.dispose();
-    _floreriaController.dispose();
     _emailController.dispose();
     _telefonoController.dispose();
     _locationController.dispose();
@@ -80,7 +78,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _updateControllers(Profile profile) {
     _nameController.text = profile.name ?? '';
-    _floreriaController.text = profile.floristeria ?? '';
     _emailController.text = profile.email ?? '';
     _telefonoController.text = profile.telefono ?? '';
     _locationController.text = profile.location ?? '';
@@ -105,7 +102,6 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       final updatedProfile = _profile!.copyWith(
         name: _nameController.text,
-        floristeria: _floreriaController.text,
         telefono: _telefonoController.text,
         location: _locationController.text,
         businessHours: _businessHoursController.text,
@@ -228,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const ImageIcon(AssetImage('assets/icon.png')),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Perfil'),
@@ -287,41 +283,34 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             _buildProfileHeader(context),
             const SizedBox(height: 32),
-            _buildTextField(context, _nameController, 'Nombre', Icons.person),
-            const SizedBox(height: 16),
-            _buildTextField(
-              context,
-              _floreriaController,
-              'Florería',
-              Icons.store,
-            ),
+            _buildTextField(context, _nameController, 'Nombre', ImageIcon(AssetImage('assets/icon.png'))),
             const SizedBox(height: 16),
             _buildTextField(
               context,
               _telefonoController,
               'Teléfono',
-              Icons.phone,
+              ImageIcon(AssetImage('assets/icon.png')),
             ),
             const SizedBox(height: 16),
             _buildTextField(
               context,
               _locationController,
               'Ubicación',
-              Icons.location_on,
+              ImageIcon(AssetImage('assets/icon.png')),
             ),
             const SizedBox(height: 16),
             _buildTextField(
               context,
               _businessHoursController,
               'Horario de Atención',
-              Icons.access_time,
+              ImageIcon(AssetImage('assets/icon.png')),
             ),
             const SizedBox(height: 16),
             _buildTextField(
               context,
               _businessDescriptionController,
               'Descripción del Negocio',
-              Icons.description,
+              ImageIcon(AssetImage('assets/icon.png')),
               maxLines: 3,
             ),
             const SizedBox(height: 16),
@@ -329,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
               context,
               _emailController,
               'Correo',
-              Icons.email,
+              ImageIcon(AssetImage('assets/icon.png')),
               isEditable: false,
             ),
             const SizedBox(height: 16),
@@ -367,11 +356,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ? NetworkImage(_avatarUrl!)
                       : null,
                   child: _avatarUrl == null
-                      ? Icon(
-                          Icons.person,
-                          size: 60,
-                          color: theme.colorScheme.onPrimary,
-                        )
+                      ? ImageIcon(AssetImage('assets/icon.png'))
                       : null,
                 ),
                 if (_isEditing)
@@ -405,7 +390,7 @@ class _ProfilePageState extends State<ProfilePage> {
     BuildContext context,
     TextEditingController controller,
     String label,
-    IconData icon, {
+    Widget icon, {
     bool isEditable = true,
     int maxLines = 1,
   }) {
@@ -416,7 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: theme.colorScheme.primary),
+        prefixIcon: icon,
         filled: true,
         fillColor: theme.colorScheme.surface.withOpacity(0.5),
         border: OutlineInputBorder(
@@ -455,7 +440,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     context,
                     controller,
                     'Enlace de Red Social',
-                    Icons.link,
+                    ImageIcon(AssetImage('assets/icon.png')),
                     isEditable: _isEditing,
                   ),
                 ),
@@ -503,7 +488,7 @@ class _ProfilePageState extends State<ProfilePage> {
           context,
           TextEditingController(text: '********'),
           'Contraseña',
-          Icons.lock,
+          ImageIcon(AssetImage('assets/icon.png')),
           isEditable: false,
         ),
         const SizedBox(height: 8),

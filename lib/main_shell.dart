@@ -21,14 +21,14 @@ class MainShell extends StatelessWidget {
         currentIndex: navigationShell.currentIndex,
         onTap: _goBranch,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Pedidos'),
+          BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icon.png')), label: 'Inicio'),
+          BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icon.png')), label: 'Pedidos'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera_alt),
+            icon: ImageIcon(AssetImage('assets/icon.png')),
             label: 'Cámara',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
+            icon: ImageIcon(AssetImage('assets/icon.png')),
             label: 'Estadísticas',
           ),
         ],
